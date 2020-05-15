@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/hobbyquaker/node-movehub#readme",
   "dependencies": {
-    "noble": "^1.8.1"
+    "@abandonware/noble": "^1.9.2-9"
   },
   "devDependencies": {
     "camo-purge": "latest",

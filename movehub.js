@@ -1,5 +1,5 @@
 const EventEmitter = require('events').EventEmitter;
-const noble = require('noble');
+const noble = require('@abandonware/noble');
 
 /**
  * @class Boost
@@ -27,22 +27,26 @@ class Boost extends EventEmitter {
         });
         noble.on('discover', peripheral => {
             this.log('peripheral', peripheral.uuid, peripheral.address, peripheral.advertisement.localName);
-            if (peripheral.advertisement.serviceUuids[0] === '000016231212efde1623785feabcd123') {
-                this.peripherals[peripheral.address] = peripheral;
-                /**
-                 * Fires when a Move Hub is found
-                 * @event Boost#hub-found
-                 * @param hub {object}
-                 * @param hub.uuid {string}
-                 * @param hub.address{string}
-                 * @param hub.localName {string}
-                 */
-                this.emit('hub-found', {
-                    uuid: peripheral.uuid,
-                    address: peripheral.address,
-                    localName: peripheral.advertisement.localName
-                });
+            if (!peripheral.advertisement.serviceUuids || !peripheral.address) {
+                this.log('skip', peripheral.uuid)
+                return;
             }
+
+            this.peripherals[peripheral.address] = peripheral;
+            /**
+             * Fires when a Move Hub is found
+             * @event Boost#hub-found
+             * @param hub {object}
+             * @param hub.uuid {string}
+             * @param hub.address{string}
+             * @param hub.localName {string}
+             */
+            this.emit('hub-found', {
+                uuid: peripheral.uuid,
+                address: peripheral.address,
+                localName: peripheral.advertisement.localName
+            });
+
         });
     }
 

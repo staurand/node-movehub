@@ -14,7 +14,7 @@ class Boost extends EventEmitter {
         noble.on('stateChange', state => {
             this.nobleState = state;
             if (state === 'poweredOn') {
-                noble.startScanning();
+                noble.startScanning(null, true);
                 /**
                  * @event Boost#ble-ready
                  * @param bleReady {boolean} reports `true`/`false` when BLE is active

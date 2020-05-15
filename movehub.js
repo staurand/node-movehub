@@ -146,6 +146,7 @@ class Hub extends EventEmitter {
                      * @event Hub#disconnect
                      */
                     this.emit('disconnect');
+                    /*
                     if (this.noReconnect) {
                         this.noReconnect = false;
                     } else {
@@ -155,7 +156,7 @@ class Hub extends EventEmitter {
                             }
                         }, 1000);
                     }
-
+                    */
                 });
                 peripheral.discoverAllServicesAndCharacteristics((error, services, characteristics) => {
                     if (error) {
@@ -168,16 +169,16 @@ class Hub extends EventEmitter {
 
                     characteristics.forEach(c => {
                         this.log('Characteristic', c.uuid);
-                        if (c.uuid === '000016241212efde1623785feabcd123') {
-                            this.characteristic = c;
 
-                            c.on('data', data => this.parseMessage(data));
-                            c.subscribe(err => {
-                                if (err) {
-                                    this.emit('error', err);
-                                }
-                            });
-                        }
+                        this.characteristic = c;
+
+                        c.on('data', data => this.parseMessage(data));
+                        c.subscribe(err => {
+                            if (err) {
+                                this.emit('error', err);
+                            }
+                        });
+
                     });
                 });
             }
@@ -311,7 +312,7 @@ class Hub extends EventEmitter {
     disconnect() {
         if (this.connected) {
             this.peripheral.disconnect();
-            this.noReconnect = true;
+            //this.noReconnect = true;
         }
     }
 

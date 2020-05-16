@@ -195,8 +195,8 @@ class Hub extends EventEmitter {
                      * @event Hub#connect
                      */
                     this.log(this.ports);
-                    this.emit('connect');
                     this.connected = true;
+                    this.emit('connect');
 
                     if (this.autoSubscribe) {
                         this.subscribeAll();

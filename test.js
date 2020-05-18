@@ -7,13 +7,15 @@ boost.on('ble-ready', status => {
 boost.on('hub-found', hubDetails => {
     console.log('boost hub-found', hubDetails);
 
-    // In this example we connect to every boost hub that is found
-    boost.connect(hubDetails.address, (err, hub) => {
-        if (err) {
-            throw err;
-        }
-        main(hub);
-    });
+    if (!hubDetails.knownPeripheral) {
+        // In this example we connect to every boost hub that is found
+        boost.connect(hubDetails.address, (err, hub) => {
+            if (err) {
+                throw err;
+            }
+            main(hub);
+        });
+    }
 });
 
 function main(hub) {

@@ -7,9 +7,10 @@ const noble = require('@abandonware/noble');
 class Boost extends EventEmitter {
     constructor() {
         super();
-        this.debug = false;
+        this.debug = true;
         this.log = this.debug ? console.log : () => {};
         this.peripherals = {};
+        this.hubs = {};
 
         noble.on('stateChange', state => {
             this.nobleState = state;
@@ -31,8 +32,10 @@ class Boost extends EventEmitter {
                 this.log('skip', peripheral.uuid)
                 return;
             }
-
-            this.peripherals[peripheral.address] = peripheral;
+            const knownPeripheral = !!this.peripherals[peripheral.address];
+            if (!knownPeripheral) {
+                this.peripherals[peripheral.address] = peripheral;
+            }
             /**
              * Fires when a Move Hub is found
              * @event Boost#hub-found
@@ -44,7 +47,8 @@ class Boost extends EventEmitter {
             this.emit('hub-found', {
                 uuid: peripheral.uuid,
                 address: peripheral.address,
-                localName: peripheral.advertisement.localName
+                localName: peripheral.advertisement.localName,
+                knownPeripheral
             });
 
         });
@@ -65,7 +69,11 @@ class Boost extends EventEmitter {
             return;
         }
 
-        callback(null, new Hub({peripheral: this.peripherals[address], debug: this.debug})); // eslint-disable-line no-use-before-define
+        if (!this.hubs[address]) {
+            this.hubs[address] = new Hub({peripheral: this.peripherals[address], debug: this.debug});
+        }
+
+        callback(null, this.hubs[address]); // eslint-disable-line no-use-before-define
         /**
          * @callback Boost#connectCallback
          * @param error {null|error}

@@ -7,7 +7,7 @@ const noble = require('@abandonware/noble');
 class Boost extends EventEmitter {
     constructor() {
         super();
-        this.debug = true;
+        this.debug = false;
         this.log = this.debug ? console.log : () => {};
         this.peripherals = {};
         this.hubs = {};
@@ -127,7 +127,6 @@ class Hub extends EventEmitter {
             9: 'red',
             10: 'white'
         };
-        this.connect(peripheral);
     }
     connect(peripheral) {
         peripheral.connect(err => {

@@ -13,12 +13,12 @@ boost.on('hub-found', hubDetails => {
             if (err) {
                 throw err;
             }
-            main(hub);
+            main(hub, boost.peripherals[hubDetails.address]);
         });
     }
 });
 
-function main(hub) {
+function main(hub, peripheral) {
     hub.on('error', (err) => {
         console.error('hub error', err);
     });
@@ -62,4 +62,6 @@ function main(hub) {
             hub.motorAngle('D', 100, -50);
         }, 2000);
     });
+
+    hub.connect(peripheral);
 }
